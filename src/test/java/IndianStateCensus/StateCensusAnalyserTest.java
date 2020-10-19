@@ -11,6 +11,7 @@ public class StateCensusAnalyserTest {
 	private static String CSV_FILE = "./IndianStateCensusDataExceptionDemo.csv";
 	private static String CSV_CENSUS_FILE_INVALID_DELIMITER = "./IndianStateCensusInvalidDelimiter.csv";
 	private static String CSV_CENSUS_FILE_INVALID_HEADER = "./IndianStateCensusInvalidHeader.csv";
+	private static String CSV_STATE_CODE_FILE = "./IndianStateCode.csv";
 
 	@Test
 	public void givenNumberOfEntriesInACSVFile_ShouldReturnExactlytheSameWhileReading()
@@ -62,4 +63,13 @@ public class StateCensusAnalyserTest {
 	}
 	// this test case checks for invalid header in csv file while reading
 
+	@Test
+	public void givenNumberOfEntriesInAStateCodeCSVFile_ShouldReturnExactlytheSameWhileReading()
+			throws StateCensusAnalyserException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		int entries = obj.readCodeData(CSV_STATE_CODE_FILE);
+		Assert.assertEquals(37, entries);
+	}
+
+	// this test case checks the total no. of entries in indian state code csv file
 }

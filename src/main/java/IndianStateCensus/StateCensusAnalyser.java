@@ -15,6 +15,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
 //UC2 - read Indian state code csv file
+//TC1.1 added - refactored UC2 to check for no of entries while reading equals to the no of entries in a csv file
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
