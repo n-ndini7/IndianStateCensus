@@ -18,6 +18,7 @@ import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 //TC1.1 added - refactored UC1 to check for no of entries while reading equals to the no of entries in a csv file
 //TC1.2 added - custom exception thrown in case of invalid file path given
 //TC1.4 added - custom exception for invalid delimiter in the file added in custom exception class
+//TC1.5 added - custom exception for invalid header in the file added in custom exception class
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -30,11 +31,22 @@ public class StateCensusAnalyser {
 			user.withType(IndianStateCensus.class);
 			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
+			int count = 0;
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				if (!line.contains(","))
 					throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 							"Invalid Delimiter in the File!! \nInvalidDelimiterException thrown....");
+				if (count == 0) {
+					String[] headerArray = line.split(",");
+					if (!(headerArray[0].equals("State") && headerArray[1].equals("Population")
+							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
+						throw new StateCensusAnalyserException(ExceptionType.INVALID_HEADER,
+								"Invalid headers in File!! \nInvalidHeaderException thrown....");
+					count++;
+
+				}
+
 			}
 			br.close();
 			Iterator<IndianStateCensus> userIterator = user1.iterator();
