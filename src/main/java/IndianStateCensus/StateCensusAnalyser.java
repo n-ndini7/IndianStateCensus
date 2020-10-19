@@ -1,5 +1,7 @@
 package IndianStateCensus;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -10,18 +12,41 @@ import java.util.Scanner;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-//UC1 - ability of analyser to load Indian state census information from a csv file
+import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
+
+//UC2 - read Indian state code csv file
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
+	private static String CSV_CENSUS_CODE_FILE = "./IndianStateCode.csv";
 
-	public void readData() {
+	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
 		try {
-			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
-			CsvToBean<IndianStateCensus> user = new CsvToBeanBuilder(readFile).withType(IndianStateCensus.class)
-					.withIgnoreLeadingWhiteSpace(true).build();
-			Iterator<IndianStateCensus> userIterator = user.iterator();
+			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
+			CsvToBeanBuilder<IndianStateCensus> user = new CsvToBeanBuilder<IndianStateCensus>(readFile);
+			user.withType(IndianStateCensus.class);
+			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
+			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
+			int count = 0;
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				if (!line.contains(","))
+					throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
+							"Invalid Delimiter in the File!! \nInvalidDelimiterException thrown....");
+				if (count == 0) {
+					String[] headerArray = line.split(",");
+					if (!(headerArray[0].equals("State") && headerArray[1].equals("Population")
+							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
+						throw new StateCensusAnalyserException(ExceptionType.INVALID_HEADER,
+								"Invalid headers in File!! \nInvalidHeaderException thrown....");
+					count++;
+
+				}
+
+			}
+			br.close();
+			Iterator<IndianStateCensus> userIterator = user1.iterator();
 			while (userIterator.hasNext()) {
 				IndianStateCensus csvuser = userIterator.next();
 				System.out.println(csvuser);
@@ -31,10 +56,35 @@ public class StateCensusAnalyser {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
+					"Invalid File Location given!! \nInvalidFilePathException thrown....");
+
 		}
+		return noOfEntries;
 	}
 
+	// method to read indian state census csv file
+	public int readCodeData(String DATA_FILE) {
+		int noOfEntries = 0;
+		try {
+			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
+			CsvToBeanBuilder<CSVStates> user = new CsvToBeanBuilder<CSVStates>(readFile).withType(CSVStates.class);
+			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
+			Iterator<CSVStates> userIterator = user1.iterator();
+			while (userIterator.hasNext()) {
+				CSVStates csvuser = userIterator.next();
+				System.out.println(csvuser);
+				System.out.println(
+						"===================================================================================================");
+				noOfEntries++;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return noOfEntries;
+	}
+
+	// method to read indian state code from csv file
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Welcome to Indian State Census Analyser Program!");
@@ -45,7 +95,18 @@ public class StateCensusAnalyser {
 		StateCensusAnalyser object = new StateCensusAnalyser();
 		switch (choice) {
 		case 1:
-			object.readData();
+			System.out.println("Press '8' to read Indian State Census Data \nPress '9' to read Indian State Code Data");
+			int select = Integer.parseInt(sc.nextLine());
+			if (select == 8) {
+				try {
+					object.readData(CSV_CENSUS_FILE);
+				} catch (StateCensusAnalyserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if (select == 9) {
+				object.readCodeData(CSV_CENSUS_CODE_FILE);
+			}
 			break;
 		case 2:
 			System.out.println("Thanks for using application!");
