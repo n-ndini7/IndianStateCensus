@@ -4,7 +4,7 @@ package IndianStateCensus;
 public class StateCensusAnalyserException extends Exception {
 
 	enum ExceptionType {
-		INVALID_FILE_PATH;
+		INVALID_FILE_PATH,INVALID_DELIMITER;
 	}
 
 	ExceptionType type;

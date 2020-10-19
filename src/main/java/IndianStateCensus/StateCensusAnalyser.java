@@ -1,5 +1,7 @@
 package IndianStateCensus;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -10,9 +12,12 @@ import java.util.Scanner;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
+
 //UC1 - ability of analyser to load Indian state census information from a csv file
 //TC1.1 added - refactored UC1 to check for no of entries while reading equals to the no of entries in a csv file
 //TC1.2 added - custom exception thrown in case of invalid file path given
+//TC1.4 added - custom exception for invalid delimiter in the file added in custom exception class
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -21,9 +26,18 @@ public class StateCensusAnalyser {
 		int noOfEntries = 0;
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			CsvToBean<IndianStateCensus> user = new CsvToBeanBuilder(readFile).withType(IndianStateCensus.class)
-					.withIgnoreLeadingWhiteSpace(true).build();
-			Iterator<IndianStateCensus> userIterator = user.iterator();
+			CsvToBeanBuilder<IndianStateCensus> user = new CsvToBeanBuilder<IndianStateCensus>(readFile);
+			user.withType(IndianStateCensus.class);
+			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
+			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				if (!line.contains(","))
+					throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
+							"Invalid Delimiter in the File!! \nInvalidDelimiterException thrown....");
+			}
+			br.close();
+			Iterator<IndianStateCensus> userIterator = user1.iterator();
 			while (userIterator.hasNext()) {
 				IndianStateCensus csvuser = userIterator.next();
 				System.out.println(csvuser);
