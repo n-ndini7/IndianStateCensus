@@ -70,21 +70,33 @@ public class StateCensusAnalyser {
 		int noOfEntries = 0;
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			CsvToBeanBuilder<CSVStates> user = new CsvToBeanBuilder<CSVStates>(readFile).withType(CSVStates.class);
+			CsvToBeanBuilder<IndianStateCensus> user = new CsvToBeanBuilder<IndianStateCensus>(readFile);
+			user.withType(IndianStateCensus.class);
 			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
-			Iterator<CSVStates> userIterator = user1.iterator();
+			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
+			int count = 0;
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				if (!line.contains(","))
+					throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
+							"Invalid Delimiter in the File!! \nInvalidDelimiterException thrown....");
+			}
+			br.close();
+			Iterator<IndianStateCensus> userIterator = user1.iterator();
 			while (userIterator.hasNext()) {
-				CSVStates csvuser = userIterator.next();
+				IndianStateCensus csvuser = userIterator.next();
 				System.out.println(csvuser);
 				System.out.println(
 						"===================================================================================================");
 				noOfEntries++;
 			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
 					"Invalid File Location given!! \nInvalidFilePathException thrown....");
 
 		}
+
 		return noOfEntries;
 
 	}
