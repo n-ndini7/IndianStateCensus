@@ -11,14 +11,16 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 //UC1 - ability of analyser to load Indian state census information from a csv file
+//TC1.1 added - refactored UC1 to check for no of entries while reading equals to the no of entries in a csv file
+//TC1.2 added - custom exception thrown in case of invalid file path given
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
 
-	public int readData() {
+	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
 		try {
-			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
+			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			CsvToBean<IndianStateCensus> user = new CsvToBeanBuilder(readFile).withType(IndianStateCensus.class)
 					.withIgnoreLeadingWhiteSpace(true).build();
 			Iterator<IndianStateCensus> userIterator = user.iterator();
@@ -31,7 +33,9 @@ public class StateCensusAnalyser {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
+					"Invalid File Location given!! \nInvalidFilePathException thrown....");
+
 		}
 		return noOfEntries;
 	}
@@ -46,7 +50,12 @@ public class StateCensusAnalyser {
 		StateCensusAnalyser object = new StateCensusAnalyser();
 		switch (choice) {
 		case 1:
-			object.readData();
+			try {
+				object.readData(CSV_CENSUS_FILE);
+			} catch (StateCensusAnalyserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case 2:
 			System.out.println("Thanks for using application!");
