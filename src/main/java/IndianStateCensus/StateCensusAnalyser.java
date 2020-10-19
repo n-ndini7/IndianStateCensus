@@ -16,6 +16,7 @@ import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
 //UC2 - read Indian state code csv file
 //TC1.1 added - refactored UC2 to check for no of entries while reading equals to the no of entries in a csv file
+//TC1.2 added - custom exception thrown in case of invalid file path given
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -65,7 +66,7 @@ public class StateCensusAnalyser {
 	}
 
 	// method to read indian state census csv file
-	public int readCodeData(String DATA_FILE) {
+	public int readCodeData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
@@ -80,9 +81,12 @@ public class StateCensusAnalyser {
 				noOfEntries++;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
+					"Invalid File Location given!! \nInvalidFilePathException thrown....");
+
 		}
 		return noOfEntries;
+
 	}
 
 	// method to read indian state code from csv file
@@ -106,7 +110,12 @@ public class StateCensusAnalyser {
 					e.printStackTrace();
 				}
 			} else if (select == 9) {
-				object.readCodeData(CSV_CENSUS_CODE_FILE);
+				try {
+					object.readCodeData(CSV_CENSUS_CODE_FILE);
+				} catch (StateCensusAnalyserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			break;
 		case 2:

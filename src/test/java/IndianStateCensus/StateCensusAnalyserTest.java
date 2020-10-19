@@ -72,4 +72,19 @@ public class StateCensusAnalyserTest {
 	}
 
 	// this test case checks the total no. of entries in indian state code csv file
+
+	@Test
+	public void givenWrongFileLocationOfStateCodeCVSFilethrowsCustomeException_ForInvalidFilePath() {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		try {
+			obj.readCodeData(CSV_FILE);
+		} catch (StateCensusAnalyserException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH, e.type);
+		}
+	}
+
+	// this test case checks if custom exception thrown in case of invalid file
+	// location of state code csv file
 }
