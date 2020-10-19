@@ -15,7 +15,7 @@ public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
 
-	public void readData() {
+	public int readData() {
 		int noOfEntries = 0;
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
@@ -33,6 +33,7 @@ public class StateCensusAnalyser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return noOfEntries;
 	}
 
 	public static void main(String[] args) {
