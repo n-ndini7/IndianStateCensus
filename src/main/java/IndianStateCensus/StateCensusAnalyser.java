@@ -17,7 +17,8 @@ import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 //UC2 - read Indian state code csv file
 //TC2.1 added - refactored UC2 to check for no of entries while reading equals to the no of entries in a csv file
 //TC2.2 added - custom exception thrown in case of invalid file path given
-//TC2.4 added - custom exception for invalid delimiter in the file added in custom exception class
+//TC2.3 added - custom exception for invalid file type added in custom exception class exception class
+//TC2.4 added - custom exception for invalid delimiter in the file added in custom
 //TC2.5 added - custom exception for invalid header in the file added in custom exception class
 
 public class StateCensusAnalyser {
@@ -27,6 +28,9 @@ public class StateCensusAnalyser {
 
 	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
+		if(!DATA_FILE.contains(".csv")) {
+			throw new StateCensusAnalyserException(ExceptionType.INVALID_TYPE,"Invalid Class Type in the File!! \nInvalidTypeException thrown....");
+		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			CsvToBeanBuilder<IndianStateCensus> user = new CsvToBeanBuilder<IndianStateCensus>(readFile);
@@ -71,6 +75,9 @@ public class StateCensusAnalyser {
 	// method to read indian state census csv file
 	public int readCodeData(String DATA_FILE) throws StateCensusAnalyserException {
 		int entries = 0;
+		if(!DATA_FILE.contains(".csv")) {
+			throw new StateCensusAnalyserException(ExceptionType.INVALID_TYPE,"Invalid Class Type in the File!! \nInvalidTypeException thrown....");
+		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			CsvToBeanBuilder<CSVStates> user = new CsvToBeanBuilder<CSVStates>(readFile);

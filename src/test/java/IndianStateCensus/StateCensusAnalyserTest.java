@@ -14,6 +14,8 @@ public class StateCensusAnalyserTest {
 	private static String CSV_STATE_CODE_FILE = "./IndianStateCode.csv";
 	private static String CSV_STATE_CODE_FILE_INVALID_DELIMITER = "./IndianStateCodeInvalidDelimiter.csv";
 	private static String CSV_STATE_CODE_FILE_INVALID_HEADER = "./IndianStateCodeInvalidHeader.csv";
+	private static String CSV_CENSUS_FILE_INVALID_TYPE = "./IndianStateCensusInvalidType.txt";
+	private static String CSV_STATE_CODE_FILE_INVALID_TYPE = "./IndianStateCodeInvalidType.txt";
 
 	@Test
 	public void givenNumberOfEntriesInACSVFile_ShouldReturnExactlytheSameWhileReading()
@@ -66,12 +68,25 @@ public class StateCensusAnalyserTest {
 	// this test case checks for invalid header in csv file while reading
 
 	@Test
+	public void givenWrongFiletypethrowsCustomeException() {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		try {
+			obj.readData(CSV_CENSUS_FILE_INVALID_TYPE);
+		} catch (StateCensusAnalyserException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
+		}
+	}
+
+	// this test case checks for custom invalid file type exception
+	@Test
 	public void givenNumberOfEntriesInAStateCodeCSVFile_ShouldReturnExactlytheSameWhileReading()
 			throws StateCensusAnalyserException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
 		int entries = obj.readCodeData(CSV_STATE_CODE_FILE);
 		System.out.println(entries);
-		//Assert.assertEquals(37, entries);
+		// Assert.assertEquals(37, entries);
 	}
 
 	// this test case checks the total no. of entries in indian state code csv file
@@ -119,4 +134,17 @@ public class StateCensusAnalyserTest {
 	// this test case checks for invalid header in indian state code csv file while
 	// reading
 
+	@Test
+	public void givenWrongFiletypethrowsCustomeExceptionfORStateCodeCSVFile() {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		try {
+			obj.readCodeData(CSV_STATE_CODE_FILE_INVALID_TYPE);
+		} catch (StateCensusAnalyserException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
+		}
+	}
+	// this test case checks for custom invalid file type exception in indian state
+	// code csv file
 }
