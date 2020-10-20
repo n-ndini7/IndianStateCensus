@@ -17,6 +17,7 @@ import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 //UC2 - read Indian state code csv file
 //TC2.1 added - refactored UC2 to check for no of entries while reading equals to the no of entries in a csv file
 //TC2.2 added - custom exception thrown in case of invalid file path given
+//TC1.3 added - custom exception for invalid file type added in custom exception class
 //TC2.4 added - custom exception for invalid delimiter in the file added in custom exception class
 //TC2.5 added - custom exception for invalid header in the file added in custom exception class
 
@@ -71,54 +72,7 @@ public class StateCensusAnalyser {
 		return noOfEntries;
 	}
 
-	// method to read indian state census csv file
-	public int readCodeData(String DATA_FILE) throws StateCensusAnalyserException {
-		int entries = 0;
-		try {
-			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			CsvToBeanBuilder<CSVStates> user = new CsvToBeanBuilder<CSVStates>(readFile);
-			user.withType(CSVStates.class);
-			CsvToBean user1 = user.withIgnoreLeadingWhiteSpace(true).build();
-			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
-			int count = 0;
-			String line = "";
-			while ((line = br.readLine()) != null) {
-				if (!line.contains(","))
-					throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
-							"Invalid Delimiter in the File!! \nInvalidDelimiterException thrown....");
-				if (count == 0) {
-					String[] headerArray = line.split(",");
-					if (!(headerArray[0].equals("State") && headerArray[1].equals("TIN")
-							&& headerArray[2].equals("StateCode")))
-						throw new StateCensusAnalyserException(ExceptionType.INVALID_HEADER,
-								"Invalid headers in File!! \nInvalidHeaderException thrown....");
-					count++;
-
-				}
-
-			}
-			br.close();
-			Iterator<CSVStates> userIterator = user1.iterator();
-			while (userIterator.hasNext()) {
-				CSVStates csvuser = userIterator.next();
-				System.out.println(csvuser);
-				System.out.println(
-						"===================================================================================================");
-				entries++;
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
-					"Invalid File Location given!! \nInvalidFilePathException thrown....");
-
-		}
-
-		return entries;
-
-	}
-
-	// method to read indian state code from csv file
-	public static void main(String[] args) {
+		public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Welcome to Indian State Census Analyser Program!");
 		System.out.println("================================================");
