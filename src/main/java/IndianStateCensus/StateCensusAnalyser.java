@@ -14,17 +14,16 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//UC2 - read Indian state code csv file
-//TC2.1 added - refactored UC2 to check for no of entries while reading equals to the no of entries in a csv file
-//TC2.2 added - custom exception thrown in case of invalid file path given
+//UC1 - read Indian state census csv file
+//TC1.1 added - refactored UC1 to check for no of entries while reading equals to the no of entries in a csv file
+//TC1.2 added - custom exception thrown in case of invalid file path given
 //TC1.3 added - custom exception for invalid file type added in custom exception class
-//TC2.4 added - custom exception for invalid delimiter in the file added in custom exception class
-//TC2.5 added - custom exception for invalid header in the file added in custom exception class
+//TC1.4 added - custom exception for invalid delimiter in the file added in custom exception class
+//TC1.5 added - custom exception for invalid header in the file added in custom exception class
 
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
-	private static String CSV_CENSUS_CODE_FILE = "./IndianStateCode.csv";
 
 	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
@@ -82,23 +81,13 @@ public class StateCensusAnalyser {
 		StateCensusAnalyser object = new StateCensusAnalyser();
 		switch (choice) {
 		case 1:
-			System.out.println("Press '8' to read Indian State Census Data \nPress '9' to read Indian State Code Data");
-			int select = Integer.parseInt(sc.nextLine());
-			if (select == 8) {
-				try {
+			try {
 					object.readData(CSV_CENSUS_FILE);
-				} catch (StateCensusAnalyserException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else if (select == 9) {
-				try {
-					object.readCodeData(CSV_CENSUS_CODE_FILE);
-				} catch (StateCensusAnalyserException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			} catch (StateCensusAnalyserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			
 			break;
 		case 2:
 			System.out.println("Thanks for using application!");
