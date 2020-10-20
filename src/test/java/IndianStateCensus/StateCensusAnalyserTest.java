@@ -11,6 +11,7 @@ public class StateCensusAnalyserTest {
 	private static String CSV_FILE = "./IndianStateCensusDataExceptionDemo.csv";
 	private static String CSV_CENSUS_FILE_INVALID_DELIMITER = "./IndianStateCensusInvalidDelimiter.csv";
 	private static String CSV_CENSUS_FILE_INVALID_HEADER = "./IndianStateCensusInvalidHeader.csv";
+	private static String CSV_CENSUS_FILE_INVALID_TYPE = "./IndianStateCensusInvalidType.txt";
 	private static String CSV_STATE_CODE_FILE = "./IndianStateCode.csv";
 	private static String CSV_STATE_CODE_FILE_INVALID_DELIMITER = "./IndianStateCodeInvalidDelimiter.csv";
 	private static String CSV_STATE_CODE_FILE_INVALID_HEADER = "./IndianStateCodeInvalidHeader.csv";
@@ -66,6 +67,18 @@ public class StateCensusAnalyserTest {
 	// this test case checks for invalid header in csv file while reading
 
 	@Test
+	public void givenWrongFiletypethrowsCustomeException() {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		try {
+			obj.readData(CSV_CENSUS_FILE_INVALID_TYPE);
+		} catch (StateCensusAnalyserException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
+    }
+    //this test case checks for custom invalid file type exception 
+    
+  @Test
 	public void givenNumberOfEntriesInAStateCodeCSVFile_ShouldReturnExactlytheSameWhileReading()
 			throws StateCensusAnalyserException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
@@ -89,6 +102,7 @@ public class StateCensusAnalyserTest {
 	}
 
 	// this test case checks if custom exception thrown in case of invalid file
+
 	// location of state code csv file
 
 	@Test
