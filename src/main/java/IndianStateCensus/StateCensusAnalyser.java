@@ -25,6 +25,9 @@ public class StateCensusAnalyser {
 
 	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
+		if(!DATA_FILE.contains(".csv")) {
+			throw new StateCensusAnalyserException(ExceptionType.INVALID_TYPE,"Invalid Class Type in the File!! \nInvalidTypeException thrown....");
+		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			CsvToBeanBuilder<IndianStateCensus> user = new CsvToBeanBuilder<IndianStateCensus>(readFile);
