@@ -1,4 +1,4 @@
-package IndianStateCensus;
+package CSVBuilder;
 
 public class CSVBuilderFactory<T> {
 	@SuppressWarnings("rawtypes")
