@@ -1,4 +1,4 @@
-package IndianStateCensus;
+package CSVBuilder;
 
 import java.io.Reader;
 import java.util.Iterator;
@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import IndianStateCensus.StateCensusAnalyserException;
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
 public class OpenCSVBuilder implements ICSVBuilder {
