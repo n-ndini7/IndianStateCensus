@@ -14,7 +14,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 2 : OpenCSVbuilder class added to ensure Single Responsibilty principle is followed
+//Refactor 3 : CSVBuilder factory and Csvbuilder added to implement interface ICSVBuilder
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -28,8 +28,8 @@ public class StateCensusAnalyser {
 		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			Iterator<IndianStateCensus> userIterator = new OpenCSVBuilder().getCsvFileIterator(readFile,
-					IndianStateCensus.class);
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			Iterator<IndianStateCensus> userIterator = csvBuilder.getCsvFileIterator(readFile, IndianStateCensus.class);
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
 			int count = 0;
 			String line = "";
@@ -69,7 +69,8 @@ public class StateCensusAnalyser {
 		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			Iterator<CSVStates> userIterator = new OpenCSVBuilder().getCsvFileIterator(readFile, CSVStates.class);
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			Iterator<CSVStates> userIterator = csvBuilder.getCsvFileIterator(readFile, CSVStates.class);
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
 			int count = 0;
 			String line = "";
