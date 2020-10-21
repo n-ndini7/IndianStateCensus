@@ -2,7 +2,7 @@ package IndianStateCensus;
 
 public class CSVBuilderFactory<T> {
 	@SuppressWarnings("rawtypes")
-	public static ICSVBuilder createCSVBuilder() {
+	public static ICSVBuilder createCSVBuilder() throws CSVBuilderException {
 		return new OpenCSVBuilder();
 	}
 
