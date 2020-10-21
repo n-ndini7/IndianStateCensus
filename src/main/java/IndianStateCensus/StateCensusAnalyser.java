@@ -123,7 +123,7 @@ public class StateCensusAnalyser {
 		int entries = 0;
 		while (userIterator.hasNext()) {
 			entries++;
-			E move = userIterator.next();
+			E count = userIterator.next();
 		}
 		return entries;
 	}
