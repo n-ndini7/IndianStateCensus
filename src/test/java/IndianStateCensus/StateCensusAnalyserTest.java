@@ -5,10 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
-import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
-
 public class StateCensusAnalyserTest {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -23,13 +19,10 @@ public class StateCensusAnalyserTest {
 
 	@Test
 	public void givenNumberOfEntriesInACSVFile_ShouldReturnExactlytheSameWhileReading()
-			throws StateCensusAnalyserException, CSVBuilderException {
+			throws StateCensusAnalyserException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
-		try {
-			int entries = obj.readData(CSV_CENSUS_FILE);
-			Assert.assertEquals(29, entries);
-		} catch (StateCensusAnalyserException e) {
-		}
+		int entries = obj.readData(CSV_CENSUS_FILE);
+		Assert.assertEquals(29, entries);
 	}
 	// this test case checks for total no. of entries in the csv file
 
@@ -41,8 +34,6 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -57,8 +48,6 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_DELIMITER, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 	// this test case checks for invalid delimiter in the csv file while reading
@@ -71,8 +60,6 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_HEADER, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 	// this test case checks for invalid header in csv file while reading
@@ -85,22 +72,16 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 
 	// this test case checks for custom invalid file type exception
 	@Test
-	public void givenNumberOfEntriesInAStateCodeCSVFile_ShouldReturnExactlytheSameWhileReading() {
+	public void givenNumberOfEntriesInAStateCodeCSVFile_ShouldReturnExactlytheSameWhileReading()
+			throws StateCensusAnalyserException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
-		int entries;
-		try {
-			entries = obj.readCodeData(CSV_STATE_CODE_FILE);
-			Assert.assertEquals(37, entries);
-		} catch (StateCensusAnalyserException | CSVBuilderException e) {
-		}
-
+		int entries = obj.readCodeData(CSV_STATE_CODE_FILE);
+		Assert.assertEquals(37, entries);
 	}
 
 	// this test case checks the total no. of entries in indian state code csv file
@@ -113,8 +94,6 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -122,19 +101,15 @@ public class StateCensusAnalyserTest {
 	// location of state code csv file
 
 	@Test
-	public void givenInvalidDelimiterInStateCodeCsvFile_ShouldThrowCustomException()
-			throws CsvRequiredFieldEmptyException {
+	public void givenInvalidDelimiterInStateCodeCsvFile_ShouldThrowCustomException() {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
 		try {
 			obj.readCodeData(CSV_STATE_CODE_FILE_INVALID_DELIMITER);
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_DELIMITER, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
-
 	// this test case checks for invalid delimiter in the indian state code csv file
 	// while reading
 
@@ -146,8 +121,6 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_HEADER, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 	// this test case checks for invalid header in indian state code csv file while
@@ -161,11 +134,8 @@ public class StateCensusAnalyserTest {
 		} catch (StateCensusAnalyserException e) {
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
-		} catch (CSVBuilderException e) {
-			e.printStackTrace();
 		}
 	}
 	// this test case checks for custom invalid file type exception in indian state
 	// code csv file
-
 }
