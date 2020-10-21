@@ -89,7 +89,7 @@ public class StateCensusAnalyser {
 			
 			while (userIterator.hasNext()) {
 				entries++;
-				CSVStates move = userIterator.next();
+				CSVStates moveNext = userIterator.next();
 			}
       br.close();
 		} catch (IOException e) {
