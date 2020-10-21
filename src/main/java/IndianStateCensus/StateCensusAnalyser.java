@@ -14,8 +14,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 1A : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
-//Refactor 1B : refactored to include getEntriesCoun() method to count no of entries of states in a csv file
+//Refactor 2 : OpenCSVbuilder class added to ensure Single Responsibilty principle is followed
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -29,7 +28,8 @@ public class StateCensusAnalyser {
 		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			Iterator<IndianStateCensus> userIterator = this.getCsvFileIterator(readFile, IndianStateCensus.class);
+			Iterator<IndianStateCensus> userIterator = new OpenCSVBuilder().getCsvFileIterator(readFile,
+					IndianStateCensus.class);
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
 			int count = 0;
 			String line = "";
@@ -69,7 +69,7 @@ public class StateCensusAnalyser {
 		}
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
-			Iterator<CSVStates> userIterator = this.getCsvFileIterator(readFile, CSVStates.class);
+			Iterator<CSVStates> userIterator = new OpenCSVBuilder().getCsvFileIterator(readFile, CSVStates.class);
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
 			int count = 0;
 			String line = "";
@@ -104,20 +104,6 @@ public class StateCensusAnalyser {
 	}
 
 	// method to read indian state code from csv file
-
-	private <E> Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws StateCensusAnalyserException {
-		try {
-			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
-			csvToBeanBuilder.withType(csvClass);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-			return csvToBean.iterator();
-		} catch (IllegalStateException e) {
-			throw new StateCensusAnalyserException(ExceptionType.UNABLE_TO_PARSE,
-					"Unable to parse State Census CSV File!! \nUnableToParseException thrown....");
-
-		}
-	}
 
 	private <E> int getEntriesCount(Iterator<E> userIterator) {
 		int entries = 0;
