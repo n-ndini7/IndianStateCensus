@@ -11,10 +11,11 @@ import java.util.Scanner;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 1 : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
+//Refactor 1A : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -33,7 +34,7 @@ public class StateCensusAnalyser {
 			int count = 0;
 			String line = "";
 			while ((line = br.readLine()) != null) {
-				if (count == 0) {
+  		if (count == 0) {
 					String[] headerArray = line.split(",");
 					if (!(headerArray[0].equals("State") && headerArray[1].equals("Population")
 							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
@@ -43,13 +44,12 @@ public class StateCensusAnalyser {
 
 				}
 
-			}
-			br.close();
+      }
 			while (userIterator.hasNext()) {
 				noOfEntries++;
 				IndianStateCensus move = userIterator.next();
 			}
-
+    			br.close();
 		} catch (IOException e) {
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
 					"Invalid State Census CSV File Location given!! \nInvalidFilePathException thrown....");
@@ -57,9 +57,8 @@ public class StateCensusAnalyser {
 		} catch (RuntimeException e) {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 					"Invalid Delimiter in the State Census CSV File!! \nInvalidDelimiterException thrown....");
-
 		}
-		return noOfEntries;
+  return noOfEntries;
 	}
 
 	// method to read indian state census csv file
@@ -87,14 +86,13 @@ public class StateCensusAnalyser {
 				}
 
 			}
-			br.close();
+			
 			while (userIterator.hasNext()) {
 				entries++;
 				CSVStates move = userIterator.next();
 			}
-
+      br.close();
 		} catch (IOException e) {
-
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
 					"Invalid State Code CSV File Location given!! \nInvalidFilePathException thrown....");
 
@@ -102,14 +100,11 @@ public class StateCensusAnalyser {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 					"Invalid Delimiter in the State Code CSV File!! \nInvalidDelimiterException thrown....");
 
-		}
-
-		return entries;
-
 	}
+    return entries;
+  }
 
 	// method to read indian state code from csv file
-
 	private <E> Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws StateCensusAnalyserException {
 		try {
 			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
@@ -121,7 +116,6 @@ public class StateCensusAnalyser {
 			throw new StateCensusAnalyserException(ExceptionType.UNABLE_TO_PARSE,
 					"Unable to parse State Census CSV File!! \nUnableToParseException thrown....");
 
-		}
-	}
-
+}
+}
 }
