@@ -14,7 +14,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 1 : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
+//Refactor 1A : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
+//Refactor 1B : refactored to include getEntriesCoun() method to count no of entries of states in a csv file
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -44,11 +45,8 @@ public class StateCensusAnalyser {
 				}
 
 			}
+			noOfEntries = this.getEntriesCount(userIterator);
 			br.close();
-			while (userIterator.hasNext()) {
-				noOfEntries++;
-				IndianStateCensus move = userIterator.next();
-			}
 
 		} catch (IOException e) {
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
@@ -87,11 +85,8 @@ public class StateCensusAnalyser {
 				}
 
 			}
+			entries = this.getEntriesCount(userIterator);
 			br.close();
-			while (userIterator.hasNext()) {
-				entries++;
-				CSVStates move = userIterator.next();
-			}
 
 		} catch (IOException e) {
 
@@ -122,6 +117,15 @@ public class StateCensusAnalyser {
 					"Unable to parse State Census CSV File!! \nUnableToParseException thrown....");
 
 		}
+	}
+
+	private <E> int getEntriesCount(Iterator<E> userIterator) {
+		int entries = 0;
+		while (userIterator.hasNext()) {
+			entries++;
+			E move = userIterator.next();
+		}
+		return entries;
 	}
 
 }
