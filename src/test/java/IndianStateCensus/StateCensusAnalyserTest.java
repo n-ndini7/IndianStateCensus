@@ -32,7 +32,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readData(CSV_FILE);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH, e.type);
 		}
@@ -47,7 +46,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readData(CSV_CENSUS_FILE_INVALID_DELIMITER);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_DELIMITER, e.type);
 		}
@@ -60,7 +58,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readData(CSV_CENSUS_FILE_INVALID_HEADER);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_HEADER, e.type);
 		}
@@ -73,7 +70,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readData(CSV_CENSUS_FILE_INVALID_TYPE);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
 		}
@@ -85,8 +81,7 @@ public class StateCensusAnalyserTest {
 			throws StateCensusAnalyserException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
 		int entries = obj.readCodeData(CSV_STATE_CODE_FILE);
-		System.out.println(entries);
-		// Assert.assertEquals(37, entries);
+		Assert.assertEquals(37, entries);
 	}
 
 	// this test case checks the total no. of entries in indian state code csv file
@@ -97,7 +92,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readCodeData(CSV_FILE);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH, e.type);
 		}
@@ -112,7 +106,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readCodeData(CSV_STATE_CODE_FILE_INVALID_DELIMITER);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_DELIMITER, e.type);
 		}
@@ -126,7 +119,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readCodeData(CSV_STATE_CODE_FILE_INVALID_HEADER);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_HEADER, e.type);
 		}
@@ -140,7 +132,6 @@ public class StateCensusAnalyserTest {
 		try {
 			obj.readCodeData(CSV_STATE_CODE_FILE_INVALID_TYPE);
 		} catch (StateCensusAnalyserException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			assertEquals(StateCensusAnalyserException.ExceptionType.INVALID_TYPE, e.type);
 		}
