@@ -14,7 +14,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 3 : CSVBuilder factory and Csvbuilder added to implement interface ICSVBuilder
+//Refactor 4 : custom exception class for CSVbuilder added 
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -56,6 +56,8 @@ public class StateCensusAnalyser {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 					"Invalid Delimiter in the State Census CSV File!! \nInvalidDelimiterException thrown....");
 
+		} catch (CSVBuilderException e) {
+			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		}
 		return noOfEntries;
 	}
@@ -98,6 +100,8 @@ public class StateCensusAnalyser {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 					"Invalid Delimiter in the State Code CSV File!! \nInvalidDelimiterException thrown....");
 
+		} catch (CSVBuilderException e) {
+			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		}
 
 		return entries;
