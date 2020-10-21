@@ -11,11 +11,11 @@ import java.util.Scanner;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
 //Refactor 1A : refactored to include getCsvFileIterator() method to get iterate through CSv file without violating  DRY principle
+//Refactor 1B : refactored to include getEntriesCoun() method to count no of entries of states in a csv file
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -45,11 +45,9 @@ public class StateCensusAnalyser {
 				}
 
 			}
-			while (userIterator.hasNext()) {
-				noOfEntries++;
-				IndianStateCensus move = userIterator.next();
-			}
+			noOfEntries = this.getEntriesCount(userIterator);
 			br.close();
+
 		} catch (IOException e) {
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
 					"Invalid State Census CSV File Location given!! \nInvalidFilePathException thrown....");
@@ -57,6 +55,7 @@ public class StateCensusAnalyser {
 		} catch (RuntimeException e) {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
 					"Invalid Delimiter in the State Census CSV File!! \nInvalidDelimiterException thrown....");
+
 		}
 		return noOfEntries;
 	}
@@ -86,13 +85,11 @@ public class StateCensusAnalyser {
 				}
 
 			}
-
-			while (userIterator.hasNext()) {
-				entries++;
-				CSVStates moveNext = userIterator.next();
-			}
+			entries = this.getEntriesCount(userIterator);
 			br.close();
+
 		} catch (IOException e) {
+
 			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
 					"Invalid State Code CSV File Location given!! \nInvalidFilePathException thrown....");
 
@@ -101,10 +98,13 @@ public class StateCensusAnalyser {
 					"Invalid Delimiter in the State Code CSV File!! \nInvalidDelimiterException thrown....");
 
 		}
+
 		return entries;
+
 	}
 
 	// method to read indian state code from csv file
+
 	private <E> Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws StateCensusAnalyserException {
 		try {
 			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
@@ -118,4 +118,14 @@ public class StateCensusAnalyser {
 
 		}
 	}
+
+	private <E> int getEntriesCount(Iterator<E> userIterator) {
+		int entries = 0;
+		while (userIterator.hasNext()) {
+			entries++;
+			E count = userIterator.next();
+		}
+		return entries;
+	}
+
 }
