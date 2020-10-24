@@ -156,4 +156,16 @@ public class StateCensusAnalyserTest {
 
 	// this test case checks for custom invalid file type exception in indian state
 	// code csv file
+
+	@Test
+	public void giveStringShouldReturnSortedResultAccordingToState()
+			throws StateCensusAnalyserException, CSVBuilderException, IOException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		String sortedData = obj.sortedCensusData();
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
+		Assert.assertEquals("Andhra Pradesh", dataArray[0].stateName);
+	}
+
+	// this test case checks sorted data in indian state census csv file
+
 }
