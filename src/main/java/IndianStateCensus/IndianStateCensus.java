@@ -26,9 +26,9 @@ public class IndianStateCensus {
 		return den;
 	}
 
-	public int PopulationData() {
-		int pop = Integer.parseInt(population);
-		return pop;
+	public int AreaData() {
+		int ar = Integer.parseInt(area);
+		return ar;
 	}
 
 	@Override

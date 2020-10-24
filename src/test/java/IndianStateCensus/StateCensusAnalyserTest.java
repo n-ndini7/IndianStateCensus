@@ -194,4 +194,16 @@ public class StateCensusAnalyserTest {
 
 	// this test case checks sorted data in decreasing order according to population
 	// density in indian state census csv file
+
+	@Test
+	public void giveStringShouldReturnSortedResultAccordingToArea()
+			throws StateCensusAnalyserException, CSVBuilderException, IOException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		String sortedData = obj.sortCensusDataAccordingtoArea();
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
+		Assert.assertEquals("Rajasthan", dataArray[0].stateName);
+	}
+
+	// this test case checks sorted data in decreasing order according to area in
+	// indian state census csv file
 }

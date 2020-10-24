@@ -30,6 +30,7 @@ import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 //UC4-  sort state code csv file data alphabetically and return it as json file
 //UC5- sort data of state census csv file in order of most to least populous
 //UC6- sort data of state census file in order of most to least population density
+//UC7 - sort data of state census file in order of most to least area wise state
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -226,4 +227,21 @@ public class StateCensusAnalyser {
 		return sortedDataJson;
 	}
 
+	public String sortCensusDataAccordingtoArea() throws CSVBuilderException {
+		try {
+			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			this.censusCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
+		} catch (IOException e) {
+			throw new CSVBuilderException("Unable to parse!! \nCSVBuilderException thrown....",
+					CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
+		} catch (CSVBuilderException e) {
+			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
+		} catch (CsvException e) {
+		}
+		Collections.sort(censusCSVList,
+				Comparator.comparing(census -> ((IndianStateCensus) census).AreaData()).reversed());
+		String sortedDataJson = new Gson().toJson(censusCSVList);
+		return sortedDataJson;
+	}
 }
