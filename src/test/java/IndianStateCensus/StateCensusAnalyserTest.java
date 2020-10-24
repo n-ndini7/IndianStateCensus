@@ -161,7 +161,7 @@ public class StateCensusAnalyserTest {
 	public void giveStringShouldReturnSortedResultAccordingToState()
 			throws StateCensusAnalyserException, CSVBuilderException, IOException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
-		String sortedData = obj.sortedCensusData(CSV_CENSUS_FILE);
+		String sortedData = obj.sortedCensusData();
 		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
 		Assert.assertEquals("Andhra Pradesh", dataArray[0].stateName);
 	}
@@ -172,10 +172,22 @@ public class StateCensusAnalyserTest {
 	public void giveStringShouldReturnSortedResultAccordingToState_ForStateCodeFile()
 			throws StateCensusAnalyserException, CSVBuilderException, IOException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
-		String sortedData = obj.sortedCensusData(CSV_STATE_CODE_FILE);
+		String sortedData = obj.sortedStateCodeData();
 		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
-		Assert.assertEquals("Andaman and Nicobar Islands", dataArray[0].stateName);
+		Assert.assertEquals("Andhra Pradesh New", dataArray[0].stateName);
 	}
 
 	// this test case checks sorted data in indian state code csv file
+
+	@Test
+	public void giveStringShouldReturnSortedResultAccordingToPopulation()
+			throws StateCensusAnalyserException, CSVBuilderException, IOException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		String sortedData = obj.sortCensusDataAccordingtoPopulation();
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
+		Assert.assertEquals("Uttar Pradesh", dataArray[0].stateName);
+	}
+
+	// this test case checks sorted data in indian state census csv file
+
 }
