@@ -180,6 +180,18 @@ public class StateCensusAnalyserTest {
 		Assert.assertEquals("Uttar Pradesh", dataArray[0].stateName);
 	}
 
-	// this test case checks sorted data in indian state census csv file
+	// this test case checks sorted data in decreasing order according to population
+	// in indian state census csv file
 
+	@Test
+	public void giveStringShouldReturnSortedResultAccordingToPopulationDensity()
+			throws StateCensusAnalyserException, CSVBuilderException, IOException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		String sortedData = obj.sortCensusDataAccordingtoPopulationDensity();
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
+		Assert.assertEquals("Arunachal Pradesh", dataArray[28].stateName);
+	}
+
+	// this test case checks sorted data in decreasing order according to population
+	// density in indian state census csv file
 }

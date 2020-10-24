@@ -11,10 +11,20 @@ public class IndianStateCensus {
 	public String population;
 
 	@CsvBindByName(column = "Area")
-	private String area;
+	public String area;
 
 	@CsvBindByName(column = "Density")
-	private String density;
+	public String density;
+
+	public int PopulationData() {
+		int pop = Integer.parseInt(population);
+		return pop;
+	}
+
+	public int DensityData() {
+		int den = Integer.parseInt(density);
+		return den;
+	}
 
 	public int PopulationData() {
 		int pop = Integer.parseInt(population);
