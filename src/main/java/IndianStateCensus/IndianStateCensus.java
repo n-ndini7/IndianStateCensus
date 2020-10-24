@@ -8,7 +8,7 @@ public class IndianStateCensus {
 	public String stateName;
 
 	@CsvBindByName(column = "Population")
-	private String population;
+	public String population;
 
 	@CsvBindByName(column = "Area")
 	private String area;

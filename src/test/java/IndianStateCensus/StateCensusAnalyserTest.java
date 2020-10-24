@@ -173,9 +173,21 @@ public class StateCensusAnalyserTest {
 			throws StateCensusAnalyserException, CSVBuilderException, IOException {
 		StateCensusAnalyser obj = new StateCensusAnalyser();
 		String sortedData = obj.sortedStateCodeData();
-		CSVStates[] dataArray = new Gson().fromJson(sortedData, CSVStates[].class);
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
 		Assert.assertEquals("Andhra Pradesh New", dataArray[0].stateName);
 	}
 
 	// this test case checks sorted data in indian state code csv file
+
+	@Test
+	public void giveStringShouldReturnSortedResultAccordingToPopulation()
+			throws StateCensusAnalyserException, CSVBuilderException, IOException {
+		StateCensusAnalyser obj = new StateCensusAnalyser();
+		String sortedData = obj.sortCensusDataAccordingtoPopulation();
+		IndianStateCensus[] dataArray = new Gson().fromJson(sortedData, IndianStateCensus[].class);
+		Assert.assertEquals("Uttar Pradesh", dataArray[0].stateName);
+	}
+
+	// this test case checks sorted data in indian state census csv file
+
 }
