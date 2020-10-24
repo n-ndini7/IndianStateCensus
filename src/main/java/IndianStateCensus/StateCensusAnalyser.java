@@ -187,17 +187,5 @@ public class StateCensusAnalyser {
 		return sortedDataJson;
 	}
 
-	public void sort2(Comparator<CSVStates> comp) {
-		for (int i = 0; i < codeCSVList.size(); i++) {
-			for (int j = 0; j < codeCSVList.size() - 1 - 1; j++) {
-				CSVStates c1 = codeCSVList.get(j);
-				CSVStates c2 = codeCSVList.get(j + 1);
-				if (comp.compare(c1, c2) > 0) {
-					codeCSVList.set(j, c2);
-					codeCSVList.set(j + 1, c1);
-				}
-			}
-		}
-	}
 
 }
