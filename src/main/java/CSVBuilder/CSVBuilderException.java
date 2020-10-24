@@ -2,13 +2,13 @@ package CSVBuilder;
 
 public class CSVBuilderException extends Exception {
 
-	enum ExceptionType {
-		UNABLE_TO_PARSE
+	public enum ExceptionType {
+		UNABLE_TO_PARSE;
 	}
 
 	ExceptionType type;
 
-	public CSVBuilderException(String message, ExceptionType type) {
+	public CSVBuilderException(String message, ExceptionType Type) {
 		super(message);
 		this.type = type;
 	}

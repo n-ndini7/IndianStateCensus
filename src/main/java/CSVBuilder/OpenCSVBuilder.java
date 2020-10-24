@@ -2,26 +2,33 @@ package CSVBuilder;
 
 import java.io.Reader;
 import java.util.Iterator;
+import java.util.List;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import IndianStateCensus.StateCensusAnalyserException;
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-public class OpenCSVBuilder implements ICSVBuilder {
+public class OpenCSVBuilder<E> implements ICSVBuilder {
+	public Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws CsvException {
+		return this.getCSVBean(reader, csvClass).iterator();
+	}
 
-	public <E> Iterator<E> getCsvFileIterator(Reader reader, Class csvClass) throws StateCensusAnalyserException {
+	public List getCsvFileList(Reader reader, Class csvClass) throws CsvException {
+		return this.getCSVBean(reader, csvClass).parse();
+	}
+
+	private CsvToBean<E> getCSVBean(Reader reader, Class csvClass) throws CsvException {
 		try {
 			CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<E>(reader);
 			csvToBeanBuilder.withType(csvClass);
-			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-			CsvToBean<E> csvToBean = csvToBeanBuilder.build();
-			return csvToBean.iterator();
+			csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true).withThrowExceptions(false);
+			return csvToBeanBuilder.build();
 		} catch (IllegalStateException e) {
-			throw new StateCensusAnalyserException(ExceptionType.UNABLE_TO_PARSE,
-					"Unable to parse State Census CSV File!! \nUnableToParseException thrown....");
-
+			throw new CsvException();
 		}
 	}
 

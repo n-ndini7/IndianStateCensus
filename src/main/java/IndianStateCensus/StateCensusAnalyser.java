@@ -6,22 +6,36 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import CSVBuilder.CSVBuilderException;
 import CSVBuilder.CSVBuilderFactory;
 import CSVBuilder.ICSVBuilder;
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
-//Refactor 4 : custom exception class for CSVbuilder added 
+//Refactor 5 : getCSVFileList() method included to take in list of census data 
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
 	private static String CSV_CENSUS_CODE_FILE = "./IndianStateCode.csv";
+
+	List<IndianStateCensus> censusCSVList;
+	List<CSVStates> codeCSVList;
+
+	public StateCensusAnalyser() {
+		this.censusCSVList = new ArrayList<IndianStateCensus>();
+		this.codeCSVList = new ArrayList<CSVStates>();
+	}
 
 	public int readData(String DATA_FILE) throws StateCensusAnalyserException {
 		int noOfEntries = 0;
@@ -29,39 +43,39 @@ public class StateCensusAnalyser {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_TYPE,
 					"Invalid Class Type in the State Census CSV File!! \nInvalidTypeException thrown....");
 		}
-		try {
-			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
+		try (Reader reader = Files.newBufferedReader(Paths.get(DATA_FILE));) {
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-			Iterator<IndianStateCensus> userIterator = csvBuilder.getCsvFileIterator(readFile, IndianStateCensus.class);
-			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
-			int count = 0;
+			List<IndianStateCensus> censusCSVList = null;
+			censusCSVList = csvBuilder.getCsvFileList(reader, IndianStateCensus.class);
+			noOfEntries = censusCSVList.size();
+			BufferedReader br = new BufferedReader(new FileReader(CSV_CENSUS_FILE));
 			String line = "";
+			int ctr = 0;
 			while ((line = br.readLine()) != null) {
-				if (count == 0) {
-					String[] headerArray = line.split(",");
-					if (!(headerArray[0].equals("State") && headerArray[1].equals("Population")
-							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
+				if (ctr == 0) {
+					String[] headers = line.split(",");
+					if (!(headers[0].equals("State") && headers[1].equals("Population") && headers[2].equals("Area")
+							&& headers[3].equals("Density")))
 						throw new StateCensusAnalyserException(ExceptionType.INVALID_HEADER,
-								"Invalid headers in State Census CSV File!! \nInvalidHeaderException thrown....");
-					count++;
-
+								"Invalid headers in the CSV File!! \nInvalidHeaderException thrown...");
+					ctr++;
 				}
-
 			}
-			noOfEntries = this.getEntriesCount(userIterator);
 			br.close();
-
 		} catch (IOException e) {
-			throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INVALID_FILE_PATH,
-					"Invalid State Census CSV File Location given!! \nInvalidFilePathException thrown....");
-
+			throw new StateCensusAnalyserException(ExceptionType.INVALID_FILE_PATH,
+					"Invalid file location given!! \nInvalidFilePAthException thrown...");
+		} catch (CSVBuilderException e1) {
+			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		} catch (RuntimeException e) {
 			throw new StateCensusAnalyserException(ExceptionType.INVALID_DELIMITER,
-					"Invalid Delimiter in the State Census CSV File!! \nInvalidDelimiterException thrown....");
+					"Invalid Delimiter in the State Code CSV File!! \nInvalidDelimiterException thrown....");
 
-		} catch (CSVBuilderException e) {
-			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
+		} catch (CsvException e) {
+			System.out.println("hello");
+
 		}
+
 		return noOfEntries;
 	}
 
@@ -75,7 +89,8 @@ public class StateCensusAnalyser {
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-			Iterator<CSVStates> userIterator = csvBuilder.getCsvFileIterator(readFile, CSVStates.class);
+			codeCSVList = csvBuilder.getCsvFileList(readFile, CSVStates.class);
+			entries = codeCSVList.size();
 			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
 			int count = 0;
 			String line = "";
@@ -91,7 +106,6 @@ public class StateCensusAnalyser {
 				}
 
 			}
-			entries = this.getEntriesCount(userIterator);
 			br.close();
 
 		} catch (IOException e) {
@@ -105,6 +119,8 @@ public class StateCensusAnalyser {
 
 		} catch (CSVBuilderException e) {
 			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
+		} catch (CsvException e) {
+			System.out.println("Hello");
 		}
 
 		return entries;
