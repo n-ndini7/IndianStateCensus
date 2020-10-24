@@ -8,15 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gson.Gson;
-import com.opencsv.bean.CsvBindByName;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
 import CSVBuilder.CSVBuilderException;
-
-import org.json.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 public class StateCensusAnalyserTest {
 
