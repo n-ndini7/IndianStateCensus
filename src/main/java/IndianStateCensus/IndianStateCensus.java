@@ -26,6 +26,11 @@ public class IndianStateCensus {
 		return den;
 	}
 
+	public int AreaData() {
+		int ar = Integer.parseInt(area);
+		return ar;
+	}
+
 	@Override
 	public String toString() {
 		return "\nState Name : " + stateName + "| Population :  " + population + "| Area(persqkm) : " + area
