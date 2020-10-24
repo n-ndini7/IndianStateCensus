@@ -138,4 +138,35 @@ public class StateCensusAnalyser {
 		return entries;
 	}
 
+	public String sortedCensusData() throws CSVBuilderException, IOException {
+		try {
+			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
+			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+			this.censusCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
+		} catch (IOException e) {
+			throw new CSVBuilderException("Unable to parse!! \nCSVBuilderException thrown....",
+					CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
+		} catch (CSVBuilderException e) {
+			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
+		} catch (CsvException e) {
+		}
+		Comparator<IndianStateCensus> comp = Comparator.comparing(census -> census.stateName);
+		this.sort(comp);
+		String sortedDataJson = new Gson().toJson(censusCSVList);
+		return sortedDataJson;
+	}
+
+	public void sort(Comparator<IndianStateCensus> comp) {
+		for (int i = 0; i < censusCSVList.size(); i++) {
+			for (int j = 0; j < censusCSVList.size() - 1 - 1; j++) {
+				IndianStateCensus c1 = censusCSVList.get(j);
+				IndianStateCensus c2 = censusCSVList.get(j + 1);
+				if (comp.compare(c1, c2) > 0) {
+					censusCSVList.set(j, c2);
+					censusCSVList.set(j + 1, c1);
+				}
+			}
+		}
+	}
+
 }
