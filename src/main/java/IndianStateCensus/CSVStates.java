@@ -5,13 +5,13 @@ import com.opencsv.bean.CsvBindByName;
 public class CSVStates {
 
 	@CsvBindByName(column = "State")
-	private String stateName;
+	public String stateName;
 
 	@CsvBindByName(column = "TIN")
-	private String tin;
+	public String tin;
 
 	@CsvBindByName(column = "StateCode")
-	private String code;
+	public String code;
 
 	@Override
 	public String toString() {
