@@ -16,6 +16,11 @@ public class IndianStateCensus {
 	@CsvBindByName(column = "Density")
 	private String density;
 
+	public int PopulationData() {
+		int pop = Integer.parseInt(population);
+		return pop;
+	}
+
 	@Override
 	public String toString() {
 		return "\nState Name : " + stateName + "| Population :  " + population + "| Area(persqkm) : " + area

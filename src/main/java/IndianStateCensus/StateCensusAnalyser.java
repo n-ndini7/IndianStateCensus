@@ -192,7 +192,7 @@ public class StateCensusAnalyser {
 		try {
 			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-			this.codeCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
+			this.censusCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
 		} catch (IOException e) {
 			throw new CSVBuilderException("Unable to parse!! \nCSVBuilderException thrown....",
 					CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
@@ -200,9 +200,9 @@ public class StateCensusAnalyser {
 			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		} catch (CsvException e) {
 		}
-		Collections.sort(censusCSVList, Comparator.comparing(census -> census.population));
-		Collections.reverseOrder();
-		String sortedDataJson = new Gson().toJson(codeCSVList);
+		Collections.sort(censusCSVList,
+				Comparator.comparing(census -> ((IndianStateCensus) census).PopulationData()).reversed());
+		String sortedDataJson = new Gson().toJson(censusCSVList);
 		return sortedDataJson;
 	}
 
