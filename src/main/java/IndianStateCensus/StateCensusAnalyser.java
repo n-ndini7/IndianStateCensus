@@ -24,6 +24,8 @@ import CSVBuilder.ICSVBuilder;
 import IndianStateCensus.StateCensusAnalyserException.ExceptionType;
 
 //Refactor 5 : getCSVFileList() method included to take in list of census data 
+//UC3 - sort state census csv file data alphabetically and return it as json file
+//UC4-  sort state code csv file data alphabetically and return it as json file
 public class StateCensusAnalyser {
 
 	private static String CSV_CENSUS_FILE = "./IndianStateCensusData.csv";
@@ -53,9 +55,9 @@ public class StateCensusAnalyser {
 			int ctr = 0;
 			while ((line = br.readLine()) != null) {
 				if (ctr == 0) {
-					String[] headers = line.split(",");
-					if (!(headers[0].equals("State") && headers[1].equals("Population") && headers[2].equals("Area")
-							&& headers[3].equals("Density")))
+					String[] headerArray = line.split(",");
+					if (!(headerArray[0].equals("State") && headerArray[1].equals("Population")
+							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
 						throw new StateCensusAnalyserException(ExceptionType.INVALID_HEADER,
 								"Invalid headers in the CSV File!! \nInvalidHeaderException thrown...");
 					ctr++;
@@ -72,7 +74,6 @@ public class StateCensusAnalyser {
 					"Invalid Delimiter in the State Code CSV File!! \nInvalidDelimiterException thrown....");
 
 		} catch (CsvException e) {
-			System.out.println("hello");
 
 		}
 
@@ -120,7 +121,6 @@ public class StateCensusAnalyser {
 		} catch (CSVBuilderException e) {
 			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		} catch (CsvException e) {
-			System.out.println("Hello");
 		}
 
 		return entries;
@@ -138,11 +138,46 @@ public class StateCensusAnalyser {
 		return entries;
 	}
 
-	public String sortedCensusData() throws CSVBuilderException, IOException {
+	public String sortedCensusData(String DATA_FILE) throws CSVBuilderException, IOException {
+		String type = "";
+		String sortedDataJson = "";
 		try {
-			Reader readFile = Files.newBufferedReader(Paths.get(CSV_CENSUS_FILE));
+			Reader readFile = Files.newBufferedReader(Paths.get(DATA_FILE));
 			ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-			this.censusCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
+			BufferedReader br = new BufferedReader(new FileReader(DATA_FILE));
+			int count = 0;
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				if (count == 0) {
+					String[] headerArray = line.split(",");
+					if ((headerArray[0].equals("State") && headerArray[1].equals("TIN")
+							&& headerArray[2].equals("StateCode")))
+						type = "State Census";
+					else if ((headerArray[0].equals("State") && headerArray[1].equals("Population")
+							&& headerArray[2].equals("Area") && headerArray[3].equals("Density")))
+						type = "State Code";
+					else
+						type = null;
+					count++;
+
+				}
+
+			}
+			br.close();
+			if (type.equalsIgnoreCase("state census")) {
+				this.censusCSVList = csvBuilder.getCsvFileList(readFile, IndianStateCensus.class);
+				Comparator<IndianStateCensus> comp = Comparator.comparing(census -> census.stateName);
+				this.sort(comp);
+				sortedDataJson = new Gson().toJson(censusCSVList);
+			} else if (type.equalsIgnoreCase("state code")) {
+				this.codeCSVList = csvBuilder.getCsvFileList(readFile, CSVStates.class);
+				Comparator<CSVStates> comp2 = Comparator.comparing(code -> code.stateName);
+				this.sort2(comp2);
+				sortedDataJson = new Gson().toJson(codeCSVList);
+
+			} else {
+				System.out.println("Invalid file!! \nUnable to parse..");
+			}
 		} catch (IOException e) {
 			throw new CSVBuilderException("Unable to parse!! \nCSVBuilderException thrown....",
 					CSVBuilderException.ExceptionType.UNABLE_TO_PARSE);
@@ -150,9 +185,6 @@ public class StateCensusAnalyser {
 			System.out.println("Unable to parse!! \nCSVBuilderException thrown....");
 		} catch (CsvException e) {
 		}
-		Comparator<IndianStateCensus> comp = Comparator.comparing(census -> census.stateName);
-		this.sort(comp);
-		String sortedDataJson = new Gson().toJson(censusCSVList);
 		return sortedDataJson;
 	}
 
@@ -164,6 +196,19 @@ public class StateCensusAnalyser {
 				if (comp.compare(c1, c2) > 0) {
 					censusCSVList.set(j, c2);
 					censusCSVList.set(j + 1, c1);
+				}
+			}
+		}
+	}
+
+	public void sort2(Comparator<CSVStates> comp) {
+		for (int i = 0; i < codeCSVList.size(); i++) {
+			for (int j = 0; j < codeCSVList.size() - 1 - 1; j++) {
+				CSVStates c1 = codeCSVList.get(j);
+				CSVStates c2 = codeCSVList.get(j + 1);
+				if (comp.compare(c1, c2) > 0) {
+					codeCSVList.set(j, c2);
+					codeCSVList.set(j + 1, c1);
 				}
 			}
 		}
